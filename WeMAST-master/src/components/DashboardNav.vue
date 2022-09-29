@@ -6,7 +6,7 @@
       </div>
       <div class="col-md  WeMast_title ">
         <label class="text-weight-bold "> {{ $t("wemast_title") }}</label>
-        <span class="text-primary text-weight-bold">(WeMAST)</span>
+        <span class="text-primary text-weight-bold">(WeMAST 2.0)</span>
       </div>
       <div class="col-md  WeMast_top_logos" style="height:20px;">
         <MainNavLogos class="" />
@@ -44,7 +44,7 @@
             class="q-pa-sm q-mr-md wemast_nav_icons"
             @click="show_login_form"
           >
-            <a :href="`${this.$store.getters['settings/backend_api_url']}bkeadmin/`">
+            <a :href="'http://169.1.31.169/bkeadmin/'">
               <q-icon
                 color="primary"
                 name="img:/uiIcons/person-inactive.svg"
@@ -54,8 +54,8 @@
                <br />
               <label class="label_title">Admin</label>
           </div>
-          <div class="q-pa-sm q-mr-md wemast_nav_icons">
-            <a :href="`${this.$store.getters['settings/backend_api_url']}/bkeadmin/#/search`">
+          <div class="q-pa-sm q-mr-md wemast_nav_icons"> 
+            <a :href="'http://169.1.31.169/bkeadmin/#/search'">
               <q-icon
                 color="primary"
                 name="img:/uiIcons/search-inactive.svg"
@@ -115,18 +115,18 @@ export default {
 
 <style soped>
 .WeMast_Img {
-  height: 55px;
+  height: 75px;
   margin-left: 8px;
   margin-right: 35px;
   margin-top: 20px;
 }
 .WeMast_title {
-  margin-top: 25px;
+  margin-top: 45px;
 }
 @media screen and (min-width: 1440px) {
   .WeMast_title {
-    margin-top: 25px;
-    font-size: 80x;
+    margin-top: 40px;
+    font-size: 16px;
   }
 }
 .WeMast_search {

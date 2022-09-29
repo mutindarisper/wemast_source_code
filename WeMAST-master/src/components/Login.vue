@@ -64,6 +64,7 @@
 </template>
 
 <script>
+   var wemast_base_url = 'http://169.1.31.169'
 export default {
   data() {
     return {

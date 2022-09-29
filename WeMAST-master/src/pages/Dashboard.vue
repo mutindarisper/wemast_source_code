@@ -226,9 +226,16 @@
         </div>
       </div>
     </div>
+
+
+    <!-- <form action='#' @submit="false;">
+    <input type='file' id='fileinput'>
+    <input type='button' id='btnLoad' value='Load' @click='loadFile()'>
+</form>  -->
   </div>
 </template>
 <script>
+  var wemast_base_url = 'http://169.1.31.169'
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import "src/assets/map.css";
@@ -242,6 +249,20 @@ import "leaflet.control.opacity/dist/L.Control.Opacity.css";
 import "leaflet-draw";
 import "leaflet-wms-header";
 import "leaflet.control.opacity";
+
+//trial custom shapefile
+
+// import "leaflet-draw/lib/leaflet-src";
+// import "leaflet-draw/lib/leaflet.draw-src";
+// import "leaflet-draw/lib/leaflet.shapefile/shp";
+// import "leaflet-draw/lib/leaflet.shapefile/leaflet.shapefile";
+// import "leaflet-draw/leaflet.draw-shapefile";
+// import "leaflet-draw/leaflet.draw-shapefile.css";
+
+// import shp from "shpjs/dist/shp";
+// import "shpjs/lib/parseShp.js"
+// import "shpjs"
+
 import "src/CustomMapControls/measure/measure.css";
 import "src/CustomMapControls/measure/MeasureTool";
 import { uid } from "quasar";
@@ -359,6 +380,26 @@ export default {
     }
   },
   methods: {
+
+//     loadFile() {
+
+// var input = document.getElementById('fileinput');
+// if (!input.files[0]) {
+//     bodyAppend("p", "Please select a file before clicking 'Load'");
+// }
+// else {
+//     var file = input.files[0];
+
+//     var fr = new FileReader();
+//     fr.onload = receiveBinary;
+//     fr.readAsArrayBuffer(file);
+// }
+// function receiveBinary() {
+//     var result = fr.result
+//     var shpfile = new L.shp(result);
+//     shpfile.addTo(this.map);
+// }
+// },
     handleMainSelections(val) {
       if (this.compare_legend) {
         this.map.removeControl(this.compare_legend); //destroy legend everytime new data come in
@@ -381,6 +422,7 @@ export default {
       this.year = val.year;
       if (process.env.DEV) console.log("Selections ", val);
       this.tiff_title = `${val?.region?.label}_${val?.subindicator}_${val?.year}`;
+      console.log(this.tiff_title, 'tiff title')
       if ("year" in val && !val.has_seasons.includes(val.subindicator)) {
         const params = {
           region: this.UserSelections?.region?.value,
@@ -759,6 +801,14 @@ export default {
         position: "topright",
         draw: {
           polyline: false,
+        //   shapefile: {
+				// shapeOptions:{
+			  //   	color: 'black',
+			  //   	weight: 3,
+			  //   	opacity: 1,
+			  //   	fillOpacity: 0					
+				// }
+		    // },
           polygon: {
             allowIntersection: false, // Restricts shapes to simple polygons
             showArea: true,
@@ -790,11 +840,12 @@ export default {
         this.custom_geojson = e.layer;
 
         this.editableLayers.addLayer(this.custom_geojson);
+        console.log(this.custom_geojson.toGeoJSON().geometry, 'custom drawn geojson')
         if (process.env.DEV)
           console.log(JSON.stringify(this.custom_geojson.toGeoJSON().geometry));
         this.$store.dispatch("Geojson/StoreGeojson", {
           custom: true,
-          geojson: this.custom_geojson.toGeoJSON().geometry
+          geojson: this.custom_geojson.toGeoJSON().geometry //didnt use the stringified version
         });
         this.$store.dispatch("WemastSelections/handleUserSelections", {
           region: {
@@ -837,14 +888,15 @@ export default {
           return this.handleAncillary(params);
         this.$q.loading.show();
         const response = await this.$axios.post(
-          `${this.$store.getters["settings/backend_api_url"]}wemast-api-back-end-0.1/api/dataserver/finddata`,
+          `${wemast_base_url}/wemast-api-back-end-0.1/api/dataserver/finddata`,
+          // `${this.$store.getters["settings/backend_api_url"]}wemast-api-back-end-0.1/api/dataserver/finddata`,
           params,
 
-          {
-            headers: {
-              sdf09rt2s: "locateit"
-            }
-          }
+          // {
+          //   headers: {
+          //     sdf09rt2s: "locateit"
+          //   }
+          // }
         );
         if (process.env.DEV) console.log("find data response ", response.data);
         if (response.data?.status === "ERROR") {
@@ -852,6 +904,7 @@ export default {
           return negative("Could not get requested data");
         }
         this.response_data = response.data;
+        // console.log(response.data, 'find data')
         await this.getWMS_Layer({
           base_url: response.data.geoserver,
           layers: response.data.layername
@@ -956,18 +1009,19 @@ export default {
         this.stats = {};
         this.timeseries_data = {};
         const response = await this.$axios.post(
-          `${this.$store.getters["settings/backend_api_url"]}wemast-api-back-end-0.1/api/dataserver/findstats`,
+          `${wemast_base_url}/wemast-api-back-end-0.1/api/dataserver/findstats`,
+          // `${this.$store.getters["settings/backend_api_url"]}wemast-api-back-end-0.1/api/dataserver/findstats`,
           params,
 
-          {
-            headers: {
-              sdf09rt2s: "locateit"
-            }
-          }
+          // {
+          //   headers: {
+          //     sdf09rt2s: "locateit"
+          //   }
+          // }
         );
         this.stats = response.data;
 
-        const { labels, stats, status } = this.stats;
+        const { labels, stats, status } = this.stats; 
         if (status === "ERROR") {
           //remove any layers
           this.raster_layers.forEach(layer => {
@@ -986,7 +1040,7 @@ export default {
         this.stats.chart_stats = chart_stats;
         if (process.env.DEV)
           console.log(
-            " response.data ",
+            " chart response.data ",
             response.data,
             " chart_stats ",
             chart_stats,
@@ -1003,12 +1057,13 @@ export default {
     async getMetaData(id) {
       try {
         const response = await this.$axios.get(
-          `${this.$store.getters["settings/backend_api_url"]}wemast-api-back-end-0.1/api/dataserver/metadata/${id}`,
-          {
-            headers: {
-              sdf09rt2s: "locateit"
-            }
-          }
+          `${wemast_base_url}/wemast-api-back-end-0.1/api/dataserver/metadata/${id}`,
+          // `${this.$store.getters["settings/backend_api_url"]}wemast-api-back-end-0.1/api/dataserver/metadata/${id}`,
+          // {
+          //   headers: {
+          //     sdf09rt2s: "locateit"
+          //   }
+          // }
         );
         this.metadata = response.data.metadata;
         if (process.env.DEV) console.log("getMetaData response", response.data);
@@ -1160,7 +1215,8 @@ export default {
         this.$q.loading.show();
 
         const response = await this.$axios.post(
-          `${this.$store.getters["settings/backend_api_url"]}wemast-api-back-end-0.1/api/dataserver/findtimeseries`,
+          // ${wemast_base_url}/wemast-api-back-end-0.1/api/dataserver/metadata/${id}
+          `${wemast_base_url}/wemast-api-back-end-0.1/api/dataserver/findtimeseries`,
           {
             ...params,
             range: params.range || [-5, 5] //years to pull
@@ -1239,6 +1295,7 @@ export default {
         // }
       })
       .addTo(this.map);
+
   }
 };
 </script>

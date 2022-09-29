@@ -158,6 +158,7 @@
 </template>
 
 <script>
+  var wemast_base_url = 'http://169.1.31.169'
 import { parameterSelections } from "src/Services/ParameterSelections";
 export default {
   data() {
@@ -217,7 +218,7 @@ export default {
   },
   mounted() {
     this.getWetlands(
-      `${this.$store.getters['settings/backend_api_url']}wemast-api-back-end-0.1/api/regions/category/2`
+      `${wemast_base_url}/wemast-api-back-end-0.1/api/regions/category/2`
     );
     this.getCounties();
   },
@@ -256,7 +257,7 @@ export default {
     async getCounties() {
       try {
         const response = await this.$axios.get(
-          `${this.$store.getters['settings/backend_api_url']}wemast-api-back-end-0.1/api/boundaries/1/sublevel`,
+          `${wemast_base_url}/wemast-api-back-end-0.1/api/boundaries/1/sublevel`,
 
           {
             headers: {
@@ -329,12 +330,12 @@ export default {
       });
       if (!val) {
         this.getWetlands(
-          `${this.$store.getters['settings/backend_api_url']}wemast-api-back-end-0.1/api/regions/category/2`
+          `${wemast_base_url}/wemast-api-back-end-0.1/api/regions/category/2`
         );
         return;
       }
       this.getWetlands(
-        `${this.$store.getters['settings/backend_api_url']}wemast-api-back-end-0.1/api/regions/category/2/zone/${val.value.id}`
+        `${wemast_base_url}/wemast-api-back-end-0.1/api/regions/category/2/zone/${val.value.id}`
       );
       this.$store.dispatch("WemastSelections/handleUserSelections", {
         country: val

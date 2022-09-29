@@ -1,5 +1,5 @@
 <template>
-  <div class="row q-pb-md q-mb-xs" style="background-color: #efefef">
+  <div class="row q-pb-md q-mb-xs" style="background-color: #e1f6f4">
     <div class="WeMast_Options_selections q-pa-xs">
       <label class="text-weight-bold">{{ $t("wemast_select_region") }}</label>
       <q-select
@@ -106,13 +106,19 @@
         label="Request"
       />
     </div>
+
+  
+
+
   </div>
 </template>
 
 <script>
+   var wemast_base_url = 'http://169.1.31.169'
 import { negative } from "src/Services/Notifications";
 import { parameterSelections } from "src/Services/ParameterSelections";
 import { selectYearByData, selectSeasonByData } from "src/Services/YearFilter";
+
 export default {
   data() {
     return {
@@ -226,16 +232,20 @@ export default {
     });
   },
   methods: {
+
+
+ 
     async getStoreStructure() {
       try {
         const response = await this.$axios.post(
-          `${this.$store.getters['settings/backend_api_url']}wemast-api-back-end-0.1/api/dataserver/getdatastorestructure`,
+          // 'http://169.1.31.169/wemast-api-back-end-0.1/api/dataserver/getdatastorestructure',
+          `${wemast_base_url }/wemast-api-back-end-0.1/api/dataserver/getdatastorestructure`,
 
-          {
-            headers: {
-              sdf09rt2s: "locateit"
-            }
-          }
+          // {
+          //   headers: {
+          //     sdf09rt2s: "locateit"
+          //   }
+          // }
         );
         this.store_structure = response?.data?.indicators;
         this.$store.dispatch("WemastSelections/handleUserSelections", {
@@ -249,20 +259,23 @@ export default {
     async getRegions() {
       try {
         const response = await this.$axios.get(
-          `${this.$store.getters['settings/backend_api_url']}wemast-api-back-end-0.1/api/regions/category/1`,
+          // 'http://169.1.31.169/wemast-api-back-end-0.1/api/regions/category/1',
+          `${wemast_base_url }/wemast-api-back-end-0.1/api/regions/category/1`,
 
-          {
-            headers: {
-              sdf09rt2s: "locateit"
-            }
-          }
+          // {
+          //   // headers: {
+          //   //   sdf09rt2s: "locateit"
+          //   // }
+          // }
         );
         if (process.env.DEV) console.log("regions response ", response.data);
         this.region_list = response.data;
+        
         const region_dropdown_list = await this.region_list.map(region => {
           return {
             value: region.code,
-            label: region.name
+            label: region.name,
+            // region_name: region.name   test
           };
         });
         this.regions = region_dropdown_list;
@@ -292,16 +305,17 @@ export default {
       });
       if (process.env.DEV)
         console.log("selected region", selected_region[0]?.geom);
+        
       this.$store.dispatch("Geojson/StoreGeojson", {
-        geojson: selected_region[0]?.geom,
+        geojson: selected_region[0]?.geom, //geometry of the selected region
         region: selection
       });
     },
     handleIndicator(selection) {
       this.$store.dispatch("WemastSelections/handleUserSelections", {
-        indicator: selection.value
+        indicator: selection.value //selected indicator
       });
-      this.sub_indicator = null;
+      this.sub_indicator = null; //selected subindicator
       this.parameter = null;
     
       this.handleSubIndicator({ value: null });
@@ -342,7 +356,7 @@ export default {
     handleRequest() {
       this.$emit("handleRequest", true);
     },
-    async handleSetDefault() {
+    async handleSetDefault() { //parameters that load on site load
       this.region = this.regions[0];
       await this.handleRegion(this.region);
       this.indicator = this.indicators[0];

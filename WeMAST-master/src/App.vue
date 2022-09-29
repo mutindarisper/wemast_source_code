@@ -27,6 +27,8 @@ export default {
     const res = await fetch("settings/settings.json");
     const data = await res.json();
     this.$store.dispatch("settings/set_backend_url", data);
+
+  
   },
   mounted() {
     this.$q.iconSet.arrow.dropdown = "app:arr_down";

@@ -6,9 +6,11 @@ export const selectYearByData = ({ store_structure, UserSelections }) => {
       years = new Set([...years, ...store_structure[key]]);
     }
   });
+  console.log(years, 'year list')
   return Array.from(years)
     .sort()
     .reverse();
+   
 };
 
 export const selectSeasonByData = ({ store_structure, UserSelections }) => {
