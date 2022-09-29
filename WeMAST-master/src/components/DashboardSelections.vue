@@ -1,7 +1,7 @@
 <template>
   <div class="row q-pb-md q-mb-xs" style="background-color: #e1f6f4">
     <div class="WeMast_Options_selections q-pa-xs">
-      <label class="text-weight-bold">{{ $t("wemast_select_region") }}</label>
+      <label  class="text-weight-bold">{{ $t("wemast_select_region") }}</label>
       <q-select
         dense
         outlined

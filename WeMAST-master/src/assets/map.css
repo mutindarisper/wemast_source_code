@@ -16,7 +16,7 @@
  
   cursor: pointer;
   /* trapezium */
-  border-left: 35px solid #000000;
+  border-left: 35px solid rgb(83, 81, 81);
   border-bottom: 15px solid transparent;
   border-top: 15px solid transparent;
   height: 165px;
@@ -27,7 +27,7 @@
  
   cursor: pointer;
   /* trapezium */
-  border-left: 35px solid #000000;
+  border-left: 35px solid rgb(83, 81, 81);
   border-bottom: 15px solid transparent;
   border-top: 15px solid transparent;
   height: 165px;
@@ -41,6 +41,7 @@
   display: inline-block;
   top: 56px;
   left: -64px;
+ 
 }
 .compare p {
   color: rgb(252, 250, 250);
