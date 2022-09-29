@@ -949,7 +949,7 @@ export default {
         //create legend based on data, translatios have been included
         let div = L.DomUtil.create("div", "legend");
         div.innerHTML += `<div > 
-        <img src=${this.legend_link} />
+        <img src=${this.legend_link}  />
        
         </div >`;
 
@@ -1621,5 +1621,8 @@ export default {
 }
 #mapContainer >>> .wemast_help:hover .tooltiptext {
   visibility: visible;
+}
+.legend{
+  border-radius: 20px;
 }
 </style>
