@@ -357,6 +357,7 @@ export default {
     },
     check_if_timeseries_data() {
       const timeseries = this.UserSelections?.timeseries;
+      console.log(this.UserSelections?.timeseries, 'user selections timeseries')
       if (timeseries.includes(this.main_params.indicator)) {
         return true;
       }
@@ -420,10 +421,12 @@ export default {
       this.raster_layers = []; //clear all layers in array
 
       this.year = val.year;
-      if (process.env.DEV) console.log("Selections ", val);
+      // if (process.env.DEV)
+       console.log("Selections ", val);
       this.tiff_title = `${val?.region?.label}_${val?.subindicator}_${val?.year}`;
       console.log(this.tiff_title, 'tiff title')
       if ("year" in val && !val.has_seasons.includes(val.subindicator)) {
+        console.log(this.UserSelections, 'user selections')
         const params = {
           region: this.UserSelections?.region?.value,
           indicator: this.UserSelections?.subindicator,
@@ -853,7 +856,7 @@ export default {
             label: "AOI"
           }
         });
-        if (this.current_geojson) this.map.removeLayer(this.current_geojson);
+        if (this.current_geojson) this.map.removeLayer(this.current_geojson); //remove previous layers
         this.handleMainSelections(this.UserSelections);
       });
 
@@ -939,7 +942,7 @@ export default {
     },
     async CreateLegend() {
       if (this.legend) {
-        this.map.removeControl(this.legend); //destroy legend everytime new data come in
+        this.map.removeControl(this.legend); //destroy legend everytime new data comes in
       }
       this.legend = L.control({
         position: "bottomright",
@@ -1034,6 +1037,20 @@ export default {
           labels.find(label => {
             if (parseFloat(label.quantity) === stat.value) {
               chart_stats.push({ ...stat, ...label });
+
+              const numbers3 = [1, 2, 3, 4, 5];
+              const new_array = numbers3.map( item => 
+                 item * 2
+                
+              )
+              // console.log(new_array, 'new array doubled')
+              const passed_filter =  numbers3.find(item =>
+                 item > 2
+                // return console.log(passed_filter, 'pass') 
+               
+              )
+              //  console.log(passed_filter, 'passed filter')
+              
             }
           });
         });
@@ -1207,11 +1224,13 @@ export default {
       try {
         let params = null;
         if (data) params = data;
+       
         else params = this.main_params;
         if (params.region != "custom") {
           this.alert = true;
           return;
         }
+
         this.$q.loading.show();
 
         const response = await this.$axios.post(
@@ -1221,6 +1240,7 @@ export default {
             ...params,
             range: params.range || [-5, 5] //years to pull
           },
+          console.log(params, 'time series params'),
           {
             headers: {
               sdf09rt2s: "locateit"
@@ -1229,9 +1249,12 @@ export default {
         );
         this.$q.loading.hide();
         this.timeseries_data = { ...response.data };
+        console.log(response.data , 'time series  response data') //same
+        console.log({...response.data } , 'time series  destructured response data') // data structure
+        
         this.line_chart_title = `${params.indicator} ${params.year}`;
         if (this.timeseries_data.stats.length === 0)
-          negative("Time series data not found");
+          negative(this.timeseries_data.errors);
       } catch (error) {
         this.$q.loading.hide();
         if (process.env.DEV) console.log("get timeseries error ", error);
