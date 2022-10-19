@@ -1,10 +1,10 @@
 <script>
-import { Pie } from "vue-chartjs";
+import { Doughnut} from "vue-chartjs";
 import Chart from "chart.js";
 // Chart.defaults.global.legend.labels.usePointStyle = true;
 import datalabels from "chartjs-plugin-datalabels";
 export default {
-  extends: Pie,
+  extends: Doughnut,
   data() {
     return {
       options: {
@@ -12,7 +12,9 @@ export default {
           display: true,
           position: "right",
           labels: {
-            fontColor: "black"
+            fontColor: "black",
+            usePointStyle: true,
+                  pointStyle: 'circle'
           }
         },
         plugins: {

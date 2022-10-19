@@ -409,7 +409,7 @@ export default {
         this.map.removeControl(this.sideByside);
       }
       this.clear_compare = true;
-      if (this.more_options_selected === "compare") this.close_card();
+      if (this.more_options_selected === "compare") this.close_card(); //close advanced filters component
       const opacityctrl = document.getElementsByClassName("myRange");
       opacityctrl[0].style.visibility = "hidden";
       const swap = document.getElementById("wemast_swap");
@@ -938,7 +938,7 @@ export default {
       this.compare_params.range = [0, 0];
       this.getTimeseries({
         data: this.compare_params
-      });
+      }); 
     },
     async CreateLegend() {
       if (this.legend) {

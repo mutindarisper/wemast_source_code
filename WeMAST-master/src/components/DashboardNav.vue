@@ -6,6 +6,7 @@
       </div>
       <div class="col-md  WeMast_title ">
         <label class="text-weight-bold "> {{ $t("wemast_title") }}</label>
+        <br>
         <span class="text-primary text-weight-bold">(WeMAST 2.0)</span>
       </div>
       <div class="col-md  WeMast_top_logos" style="height:20px;">

@@ -23,7 +23,7 @@
     <div class="col">
         <img
         :src="require('assets/logos/WeMAST.png')"
-        class="WeMast_Dashboard_logos" style="margin-left:30%;"
+        class="WeMast_Dashboard_logos" style="margin-left:-10%;"
       />
     </div>
       

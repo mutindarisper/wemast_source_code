@@ -1,5 +1,5 @@
 <template>
-  <div class="row q-pb-md q-mb-xs" style="background-color: #e1f6f4">
+  <div class="row q-pb-md q-mb-xs" style="background-color: #ddd">
     <div class="WeMast_Options_selections q-pa-xs">
       <label  class="text-weight-bold">{{ $t("wemast_select_region") }}</label>
       <q-select
@@ -157,6 +157,7 @@ export default {
         { label: this.$t("exposure"), value: "exposure" },
         { label: this.$t("sensitivity"), value: "sensitivity" },
         { label: this.$t("resiliance"), value: "resiliance" },
+        // { label: this.$t("air_quality"), value: "air_quality"}
       
       ];
     },
@@ -181,6 +182,12 @@ export default {
           { label: "Prec Index", value: "spi" },
           { label: this.$t("Undulation"), value: "twi" }
         ];
+        if (this.indicator?.value === "air_quality")
+        return [
+          { label: this.$t("nitrogen_dioxide"), value: "nitrogen_dioxide", disable: false },
+          { label: "Sulphur Dioxide", value: "sulphur_dioxide" },
+          { label: this.$t("carbon_monoxide"), value: "carbon_monoxide" }
+        ];
         
     },
     parameters() {
@@ -203,6 +210,7 @@ export default {
       return false;
     },
     hasSeason() {
+      console.log(this.has_seasons, 'has seasons')
       if (this.has_seasons.includes(this.sub_indicator?.value)) return true;
       if (this.has_seasons.includes(this.parameter?.value)) return true;
 
@@ -239,6 +247,7 @@ export default {
       try {
         const response = await this.$axios.post(
           // 'http://169.1.31.169/wemast-api-back-end-0.1/api/dataserver/getdatastorestructure',
+          
           `${wemast_base_url }/wemast-api-back-end-0.1/api/dataserver/getdatastorestructure`,
 
           // {
@@ -247,7 +256,9 @@ export default {
           //   }
           // }
         );
+        // console.log(response.data, 'get store response data')
         this.store_structure = response?.data?.indicators;
+        // console.log(this.store_structure, 'store structure ')
         this.$store.dispatch("WemastSelections/handleUserSelections", {
           store_structure: this.store_structure,
           timeseries:response?.data?.timeseries
@@ -260,7 +271,8 @@ export default {
       try {
         const response = await this.$axios.get(
           // 'http://169.1.31.169/wemast-api-back-end-0.1/api/regions/category/1',
-          `${wemast_base_url }/wemast-api-back-end-0.1/api/regions/category/1`,
+          'http://149.248.57.97:8700/wemast-api-back-end-0.2/api/regions/category1/',
+          // `${wemast_base_url }/wemast-api-back-end-0.1/api/regions/category/1`,
 
           // {
           //   // headers: {
@@ -272,9 +284,10 @@ export default {
         this.region_list = response.data;
         
         const region_dropdown_list = await this.region_list.map(region => {
+          // console.log(region.features[0].properties.name, 'region')
           return {
             value: region.code,
-            label: region.name,
+            label: region.name
             // region_name: region.name   test
           };
         });
@@ -301,6 +314,7 @@ export default {
         close_advanced: true           //elsewhere
       });
       const selected_region = this.region_list.filter(region => {
+        // console.log(selected_region, 'selected region')
         return region.code === selection.value;
       });
       if (process.env.DEV)
@@ -360,6 +374,7 @@ export default {
       this.region = this.regions[0];
       await this.handleRegion(this.region);
       this.indicator = this.indicators[0];
+      console.log(this.indicators, 'indicators in computed')
       await this.handleIndicator(this.indicator);
       this.sub_indicator = this.sub_indicators[0];
       await this.handleSubIndicator(this.sub_indicator);
