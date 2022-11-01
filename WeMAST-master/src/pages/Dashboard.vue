@@ -10,6 +10,10 @@
     clear_compare
     {{ clear_compare }} -->
 
+    <div class="col-md  WeMast_top_logos" id="logos" style="height:20px;">
+        <MainNavLogos class="" />
+      </div>
+
     <div class="mapwrap">
       <div id="more_options">
         <div class="more_options_group">
@@ -320,6 +324,7 @@ export default {
     };
   },
   components: {
+    MainNavLogos: require("src/components/MainNavLogos").default,
     DashboardNav: require("src/components/DashboardNav").default,
     AdvancedFilters: require("src/components/AdvancedFilters").default,
     Compare: require("src/components/Compare").default,
@@ -1324,10 +1329,23 @@ export default {
 </script>
 
 <style scoped>
+.WeMast_top_logos {
+  position: absolute;
+  top: 89vh;
+  left: 8vw;
+  z-index:1000 ;
+ 
+ 
+  /* margin-top: 35px; */
+}
+
 #mapwrap {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  position: relative;
+  top: -10.5vh;
+  background-color: rgb(26, 209, 56);
 }
 #wemast_base_layers {
   margin-top: 70px;

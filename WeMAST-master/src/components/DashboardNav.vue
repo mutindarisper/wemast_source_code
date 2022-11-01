@@ -1,17 +1,19 @@
 <template>
   <div class="q-pa-none sticky">
-    <div class="row q-mb-sm">
+    <div class="row q-mb-sm" id="navigation">
       <div class="co">
         <img :src="require('assets/logos/SASSCAL.png')" class="WeMast_Img" />
       </div>
+      <span id="wemast_2" class="text-weight-bold">WeMAST</span>
       <div class="col-md  WeMast_title ">
+        
         <label class="text-weight-bold "> {{ $t("wemast_title") }}</label>
-        <br>
-        <span class="text-primary text-weight-bold">(WeMAST 2.0)</span>
+        
+        <!-- <span id="wemast_2" class="text-primary text-weight-bold">WeMAST 2.0</span> -->
       </div>
-      <div class="col-md  WeMast_top_logos" style="height:20px;">
+      <!-- <div class="col-md  WeMast_top_logos" style="height:20px;">
         <MainNavLogos class="" />
-      </div>
+      </div> -->
 
       <div class="  WeMast_right_items ">
         <div class="row float-right" >
@@ -93,7 +95,7 @@ export default {
   },
   components: {
     DashboardSelections: require("src/components/DashboardSelections").default,
-    MainNavLogos: require("src/components/MainNavLogos").default,
+    // MainNavLogos: require("src/components/MainNavLogos").default,
     Login: require("src/components/Login").default,
     LanguageSelection: require("src/components/LanguageSelection").default
   },
@@ -115,6 +117,14 @@ export default {
 </script>
 
 <style soped>
+#navigation{
+  background: url('/images/wetland2.PNG');
+  height: 12vh;
+  /* background-clip: content-box; */
+  background-repeat: no-repeat;
+  background-size: 100vw;
+  
+}
 .WeMast_Img {
   height: 75px;
   margin-left: 8px;
@@ -123,11 +133,20 @@ export default {
 }
 .WeMast_title {
   margin-top: 45px;
+  position: relative;
+  left: 2vw;
+}
+#wemast_2{
+  margin-top: 25px;
+  position: relative;
+  left: 0.5vw;
+  font-size: 36px;
+  color: black;
 }
 @media screen and (min-width: 1440px) {
   .WeMast_title {
     margin-top: 40px;
-    font-size: 16px;
+    font-size: 20px;
   }
 }
 .WeMast_search {
