@@ -29,7 +29,7 @@
         rounded
         @input="handleIndicator"
         v-model="indicator"
-        :options="indicators"
+        :options="this.indicators_list"
         :options-dense="true"
       />
     </div>
@@ -125,6 +125,7 @@ export default {
       language: null, //holds the selected language
       region: null, //holds the selected region
       indicator: null, //holds the selected indicator
+      indicators_list:[],
       sub_indicator: null, //holds the selected sub_indicator
       year: null, //holds the selected year
       season: null, //holds the selected year
@@ -153,13 +154,15 @@ export default {
   
     },
     indicators() {
-      return [
-        { label: this.$t("exposure"), value: "exposure" },
-        { label: this.$t("sensitivity"), value: "sensitivity" },
-        { label: this.$t("resiliance"), value: "resiliance" },
-        // { label: this.$t("air_quality"), value: "air_quality"}
+      // return [
+      //   { label: this.$t("exposure"), value: "exposure" },
+      //   { label: this.$t("sensitivity"), value: "sensitivity" },
+      //   { label: this.$t("resiliance"), value: "resiliance" },
+      //   // { label: this.$t("air_quality"), value: "air_quality"}
       
-      ];
+      // ];
+
+    
     },
     sub_indicators() {
       if (this.indicator?.value === "exposure")
@@ -272,6 +275,7 @@ export default {
         const response = await this.$axios.get(
           // 'http://169.1.31.169/wemast-api-back-end-0.1/api/regions/category/1',
           'http://149.248.57.97:8700/wemast-api-back-end-0.2/api/regions/category1/',
+        
           // `${wemast_base_url }/wemast-api-back-end-0.1/api/regions/category/1`,
 
           // {
@@ -325,15 +329,48 @@ export default {
         region: selection
       });
     },
-    handleIndicator(selection) {
-      this.$store.dispatch("WemastSelections/handleUserSelections", {
-        indicator: selection.value //selected indicator
-      });
-      this.sub_indicator = null; //selected subindicator
-      this.parameter = null;
+    // http://149.248.57.97:8700/wemast-api-back-end-0.2/api/dataserver/productinfo/
+   async handleIndicator(selection) {
+      try {
+
+        const response = await this.$axios.get(
+          // 'http://169.1.31.169/wemast-api-back-end-0.1/api/regions/category/1',
+          'http://149.248.57.97:8700/wemast-api-back-end-0.2/api/dataserver/productinfo/',
+        
+          // `${wemast_base_url }/wemast-api-back-end-0.1/api/regions/category/1`,
+
+          // {
+          //   // headers: {
+          //   //   sdf09rt2s: "locateit"
+          //   // }
+          // }
+        );
+
+        var indicator_list = response.data.indicators
+        console.log(indicator_list, 'indicator list')
+      this.indicators_list = indicator_list
+
+      var selected_indicator = selection
+      console.log(selected_indicator, 'selected indicator ')
+      this.indicator = selected_indicator
+      // console.log(this.indicators_list.indicators , 'this.indicators_list')
+      return this.indicator_list
+        
+        
+      } catch (error) {
+        console.log('error')
+        
+      }
+
+      // this.$store.dispatch("WemastSelections/handleUserSelections", {
+      //   indicator: selection.value //selected indicator
+      // });
+      // this.sub_indicator = null; //selected subindicator
+      // this.parameter = null;
     
-      this.handleSubIndicator({ value: null });
+      // this.handleSubIndicator({ value: null });
     },
+    
     handleSubIndicator(selection) {
       this.$store.dispatch("WemastSelections/handleUserSelections", {
         subindicator: selection.value,
@@ -373,10 +410,10 @@ export default {
     async handleSetDefault() { //parameters that load on site load
       this.region = this.regions[0];
       await this.handleRegion(this.region);
-      this.indicator = this.indicators[0];
+      this.indicator = this.indicators_list[0];
       console.log(this.indicators, 'indicators in computed')
       await this.handleIndicator(this.indicator);
-      this.sub_indicator = this.sub_indicators[0];
+      // this.sub_indicator = this.sub_indicators[0];
       await this.handleSubIndicator(this.sub_indicator);
       this.year = await selectYearByData({
         store_structure: this.UserSelections?.store_structure,
