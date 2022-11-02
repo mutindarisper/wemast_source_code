@@ -43,7 +43,7 @@
         outlined
         rounded
         v-model="sub_indicator"
-        :options="sub_indicators"
+        :options="this.sub_indicators_list"
         @input="handleSubIndicator"
         :options-dense="true"
         style="width: 180px"
@@ -73,7 +73,7 @@
         outlined
         v-model="year"
         @input="handleYear"
-        :options="years"
+        :options="this.year_list"
         :options-dense="true"
         style="width: 130px"
       />
@@ -126,8 +126,10 @@ export default {
       region: null, //holds the selected region
       indicator: null, //holds the selected indicator
       indicators_list:[],
-      sub_indicator: null, //holds the selected sub_indicator
-      year: null, //holds the selected year
+      sub_indicator: null, //holds the selected sub_indicator,
+      sub_indicators_list:[],
+      year: null, //holds the selected year,
+      year_list:[],
       season: null, //holds the selected year
       region_list: [],
       regions: null,
@@ -165,32 +167,32 @@ export default {
     
     },
     sub_indicators() {
-      if (this.indicator?.value === "exposure")
-        return [
-          { label: this.$t("land_cover"), value: "lulc" },
-          { label: "Vegetation Cover", value: "ndvi" },
-          { label: this.$t("wetland_inventory"), value: "wetland_inventory" }
-        ];
-      if (this.indicator?.value === "sensitivity")
-        return [
-          { label: this.$t("water_quality"), value: "water_quality" },
-          {
-            label: this.$t("soil_moisture_index"),
-            value: "smi"
-          }
-        ];
-      if (this.indicator?.value === "resiliance")
-        return [
-          { label: this.$t("burnt_area"), value: "burntarea", disable: false },
-          { label: "Prec Index", value: "spi" },
-          { label: this.$t("Undulation"), value: "twi" }
-        ];
-        if (this.indicator?.value === "air_quality")
-        return [
-          { label: this.$t("nitrogen_dioxide"), value: "nitrogen_dioxide", disable: false },
-          { label: "Sulphur Dioxide", value: "sulphur_dioxide" },
-          { label: this.$t("carbon_monoxide"), value: "carbon_monoxide" }
-        ];
+      // if (this.indicator?.value === "exposure")
+      //   return [
+      //     { label: this.$t("land_cover"), value: "lulc" },
+      //     { label: "Vegetation Cover", value: "ndvi" },
+      //     { label: this.$t("wetland_inventory"), value: "wetland_inventory" }
+      //   ];
+      // if (this.indicator?.value === "sensitivity")
+      //   return [
+      //     { label: this.$t("water_quality"), value: "water_quality" },
+      //     {
+      //       label: this.$t("soil_moisture_index"),
+      //       value: "smi"
+      //     }
+      //   ];
+      // if (this.indicator?.value === "resiliance")
+      //   return [
+      //     { label: this.$t("burnt_area"), value: "burntarea", disable: false },
+      //     { label: "Prec Index", value: "spi" },
+      //     { label: this.$t("Undulation"), value: "twi" }
+      //   ];
+      //   if (this.indicator?.value === "air_quality")
+      //   return [
+      //     { label: this.$t("nitrogen_dioxide"), value: "nitrogen_dioxide", disable: false },
+      //     { label: "Sulphur Dioxide", value: "sulphur_dioxide" },
+      //     { label: this.$t("carbon_monoxide"), value: "carbon_monoxide" }
+      //   ];
         
     },
     parameters() {
@@ -251,7 +253,8 @@ export default {
         const response = await this.$axios.post(
           // 'http://169.1.31.169/wemast-api-back-end-0.1/api/dataserver/getdatastorestructure',
           
-          `${wemast_base_url }/wemast-api-back-end-0.1/api/dataserver/getdatastorestructure`,
+          // `${wemast_base_url }/wemast-api-back-end-0.1/api/dataserver/getdatastorestructure`,
+          'http://149.248.57.97:8700/wemast-api-back-end-0.2/api/dataserver/getdatastorestructure/',
 
           // {
           //   headers: {
@@ -353,8 +356,11 @@ export default {
       var selected_indicator = selection
       console.log(selected_indicator, 'selected indicator ')
       this.indicator = selected_indicator
+
+      window.indicator = selected_indicator
+      console.log( window.indicator, 'global indicator')
       // console.log(this.indicators_list.indicators , 'this.indicators_list')
-      return this.indicator_list
+      return this.indicator
         
         
       } catch (error) {
@@ -371,17 +377,49 @@ export default {
       // this.handleSubIndicator({ value: null });
     },
     
-    handleSubIndicator(selection) {
-      this.$store.dispatch("WemastSelections/handleUserSelections", {
-        subindicator: selection.value,
-        sub_indicator: selection.value,
-        subindicator_name: selection.label
-      });
-      this.year = null;
-      this.season = null;
-      this.parameter = null;
-      this.handleYear(null);
-      this.handleSeason({ value: null });
+   async handleSubIndicator() { //
+      try {
+        // var selected_indicator =  window.indicator 
+        console.log(window.indicator , 'indicator in subindicator fn')
+
+const response = await this.$axios.get(
+  // 'http://169.1.31.169/wemast-api-back-end-0.1/api/regions/category/1',
+  'http://149.248.57.97:8700/wemast-api-back-end-0.2/api/dataserver/productinfo/?get_sub_indicators=Exposure',
+
+  // `${wemast_base_url }/wemast-api-back-end-0.1/api/regions/category/1`,
+
+  // {
+  //   // headers: {
+  //   //   sdf09rt2s: "locateit"
+  //   // }
+  // }
+);
+
+var sub_indicator_list = response.data.sub_indicators
+console.log(sub_indicator_list, 'sub indicator list')
+this.sub_indicators_list = sub_indicator_list
+
+// var selected_indicator = selection
+// console.log(selected_indicator, 'selected indicator ')
+// this.indicator = selected_indicator
+// // console.log(this.indicators_list.indicators , 'this.indicators_list')
+// return this.indicator_list
+
+
+} catch (error) {
+console.log('error')
+
+}
+      // this.$store.dispatch("WemastSelections/handleUserSelections", {
+      //   subindicator: selection.value,
+      //   sub_indicator: selection.value,
+      //   subindicator_name: selection.label
+      // });
+      // this.year = null;
+      // this.season = null;
+      // this.parameter = null;
+      // this.handleYear(null);
+      // this.handleSeason({ value: null });
     },
     handleParameter(selection) {
       this.year = null;
@@ -393,11 +431,48 @@ export default {
         subindicator_name: selection.label
       });
     },
-    handleYear(selection) {
-      this.$store.dispatch("WemastSelections/handleUserSelections", {
-        year: selection
-      });
-      this.season = null
+   async handleYear(selection) { //
+
+
+      try {
+        // var selected_indicator =  window.indicator 
+        console.log(window.indicator , 'indicator in subindicator fn')
+
+const response = await this.$axios.get(
+  // 'http://169.1.31.169/wemast-api-back-end-0.1/api/regions/category/1',
+  'http://149.248.57.97:8700/wemast-api-back-end-0.2/api/dataserver/getproductinfo_years/?indicator=Exposure&sub_indicator=Land%20Cover',
+
+  // `${wemast_base_url }/wemast-api-back-end-0.1/api/regions/category/1`,
+
+  // {
+  //   // headers: {
+  //   //   sdf09rt2s: "locateit"
+  //   // }
+  // }
+);
+
+var year_list = response.data.years
+console.log(year_list, 'year list')
+this.year_list = year_list
+
+// var selected_indicator = selection
+// console.log(selected_indicator, 'selected indicator ')
+// this.indicator = selected_indicator
+// // console.log(this.indicators_list.indicators , 'this.indicators_list')
+// return this.indicator_list
+
+
+} catch (error) {
+console.log('error')
+
+}
+
+
+
+      // this.$store.dispatch("WemastSelections/handleUserSelections", {
+      //   year: selection
+      // });
+      // this.season = null
     },
     handleSeason(selection) {
       this.$store.dispatch("WemastSelections/handleUserSelections", {
