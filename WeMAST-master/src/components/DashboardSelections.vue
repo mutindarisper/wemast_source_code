@@ -144,7 +144,8 @@ export default {
         "nssdi",
         "wwpi",
       ],
-      store_structure: null //
+      store_structure: null, //
+      indicators: null
     };
   },
   computed: {
@@ -264,7 +265,7 @@ export default {
         );
         // console.log(response.data, 'get store response data')
         this.store_structure = response?.data?.indicators;
-        // console.log(this.store_structure, 'store structure ')
+        console.log(this.store_structure, 'store structure ')
         this.$store.dispatch("WemastSelections/handleUserSelections", {
           store_structure: this.store_structure,
           timeseries:response?.data?.timeseries
@@ -346,21 +347,42 @@ export default {
           //   // headers: {
           //   //   sdf09rt2s: "locateit"
           //   // }
-          // }
+          // }handleRequest
         );
 
         var indicator_list = response.data.indicators
         console.log(indicator_list, 'indicator list')
-      this.indicators_list = indicator_list
+      this.indicators_list =  indicator_list
+      console.log(this.indicators_list, 'this indicators list')
+
+      this.indicators = response.data.indicators
+      console.log(this.indicators, 'this.indicators ')
 
       var selected_indicator = selection
       console.log(selected_indicator, 'selected indicator ')
       this.indicator = selected_indicator
+      
 
       window.indicator = selected_indicator
+
       console.log( window.indicator, 'global indicator')
+      
+
+
+      //update the store with selected indicator
+
+            this.$store.dispatch("WemastSelections/handleUserSelections", {
+        indicator: selected_indicator //selected indicator
+      });
+
+      this.sub_indicator = null; //selected subindicator
+      this.parameter = null;
+    
+      this.handleSubIndicator({ value: null });
+
+
       // console.log(this.indicators_list.indicators , 'this.indicators_list')
-      return this.indicator
+      return this.indicators_list
         
         
       } catch (error) {
@@ -377,7 +399,7 @@ export default {
       // this.handleSubIndicator({ value: null });
     },
     
-   async handleSubIndicator() { //
+   async handleSubIndicator(selection) { //
       try {
         // var selected_indicator =  window.indicator 
         console.log(window.indicator , 'indicator in subindicator fn')
@@ -399,11 +421,23 @@ var sub_indicator_list = response.data.sub_indicators
 console.log(sub_indicator_list, 'sub indicator list')
 this.sub_indicators_list = sub_indicator_list
 
-// var selected_indicator = selection
-// console.log(selected_indicator, 'selected indicator ')
-// this.indicator = selected_indicator
-// // console.log(this.indicators_list.indicators , 'this.indicators_list')
+var selected_sub_indicator = selection
+console.log(selected_sub_indicator, 'selected  sub indicator ')
+this.sub_indicator = selected_sub_indicator
+console.log(this.sub_indicator , 'this.sub indicator')
 // return this.indicator_list
+
+
+this.$store.dispatch("WemastSelections/handleUserSelections", {
+        subindicator: selected_sub_indicator,
+        sub_indicator: selected_sub_indicator,
+        subindicator_name: selection.label //supposed to be the parameter name
+      });
+      this.year = null;
+      this.season = null;
+      this.parameter = null;
+      this.handleYear(null);
+      this.handleSeason({ value: null });
 
 
 } catch (error) {
@@ -455,11 +489,15 @@ var year_list = response.data.years
 console.log(year_list, 'year list')
 this.year_list = year_list
 
-// var selected_indicator = selection
-// console.log(selected_indicator, 'selected indicator ')
-// this.indicator = selected_indicator
-// // console.log(this.indicators_list.indicators , 'this.indicators_list')
-// return this.indicator_list
+var selected_year = selection
+console.log(selected_year, 'selected year ')
+this.year = selected_year
+console.log(this.year , 'this. year')
+
+this.$store.dispatch("WemastSelections/handleUserSelections", {
+        year: selected_year 
+      });
+      this.season = null
 
 
 } catch (error) {
@@ -467,10 +505,8 @@ console.log('error')
 
 }
 
-
-
       // this.$store.dispatch("WemastSelections/handleUserSelections", {
-      //   year: selection
+      //   year: selected_year 
       // });
       // this.season = null
     },
@@ -484,18 +520,32 @@ console.log('error')
     },
     async handleSetDefault() { //parameters that load on site load
       this.region = this.regions[0];
+      console.log(this.regions, 'list of regions')
       await this.handleRegion(this.region);
+
+
+      console.log(this.indicators, 'DEFAULT this.indicators')
+
       this.indicator = this.indicators_list[0];
-      console.log(this.indicators, 'indicators in computed')
+      // console.log(this.indicators_list, 'list of indicators')
+      console.log(this.indicator, 'indicator first')
       await this.handleIndicator(this.indicator);
-      // this.sub_indicator = this.sub_indicators[0];
+
+      this.sub_indicator = this.sub_indicators_list[0];
       await this.handleSubIndicator(this.sub_indicator);
+
+      
+
+
       this.year = await selectYearByData({
         store_structure: this.UserSelections?.store_structure,
         UserSelections: this.UserSelections
       })[0];
 
-      this.handleYear(this.year);
+      this.year = this.year_list[0];
+      await this.handleYear(this.year)
+
+      // this.handleYear(this.year);
       this.handleRequest()
     }
   }

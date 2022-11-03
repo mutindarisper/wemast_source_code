@@ -253,6 +253,7 @@ import "leaflet.control.opacity/dist/L.Control.Opacity.css";
 import "leaflet-draw";
 import "leaflet-wms-header";
 import "leaflet.control.opacity";
+import "leaflet.wms"
 
 //trial custom shapefile
 
@@ -414,6 +415,7 @@ export default {
         this.map.removeControl(this.sideByside);
       }
       this.clear_compare = true;
+
       if (this.more_options_selected === "compare") this.close_card(); //close advanced filters component
       const opacityctrl = document.getElementsByClassName("myRange");
       opacityctrl[0].style.visibility = "hidden";
@@ -425,10 +427,16 @@ export default {
       });
       this.raster_layers = []; //clear all layers in array
 
-      this.year = val.year;
+      console.log(val.store_structure.Exposure['Land Cover'].year[0], 'val')
+
+      var subindicator = Object.keys(val.store_structure.Exposure) 
+      console.log(subindicator, 'SUBINDIATOR')
+
+      this.year = val.store_structure.Exposure['Land Cover'].year[0];
+     
       // if (process.env.DEV)
        console.log("Selections ", val);
-      this.tiff_title = `${val?.region?.label}_${val?.subindicator}_${val?.year}`;
+      this.tiff_title = `${val?.region?.label}_${val?.sub_indicator}_${val?.year}`;
       console.log(this.tiff_title, 'tiff title')
       if ("year" in val && !val.has_seasons.includes(val.subindicator)) {
         console.log(this.UserSelections, 'user selections')
@@ -512,6 +520,10 @@ export default {
     handleRequest(val) {
       //called when request button is clicked in selections and advanced filters
       this.handleMainSelections(this.UserSelections);
+        this.findData()
+
+
+
     },
     handleCompareEmit(val) {
       //called when compare  button is clicked in compare
@@ -887,18 +899,40 @@ export default {
         document.getElementById("wemast_draw").style.backgroundColor = "white";
       });
     },
-    async findData(params) {
+    async findData(params) { //params as parameter lol
       try {
-        if (!params.geometry)
-          return negative("Please select a basin or wetland for analysis");
+        // if (!params.geometry)
+        //   return negative("Please select a basin or wetland for analysis");
 
-        if (params.indicator === "rainfall")
-          return this.handleAncillary(params);
+        // if (params.indicator === "rainfall")
+        //   return this.handleAncillary(params);
         this.$q.loading.show();
+
+        
+       var params = {
+                        ...params,
+                        geometry: JSON.stringify(this.selectedGeojson.geojson),
+                        indicator: this.UserSelections?.indicator,
+                       sub_indicator: this.UserSelections?.sub_indicator,
+                        year: this.UserSelections?.year,
+                      };
+
+
+                      console.log(params.indicator, 'PARAMETER INDICATOR')
         const response = await this.$axios.post(
-          `${wemast_base_url}/wemast-api-back-end-0.1/api/dataserver/finddata`,
+          // `${wemast_base_url}/wemast-api-back-end-0.1/api/dataserver/finddata`,
+          'http://149.248.57.97:8700/wemast-api-back-end-0.2/api/dataserver/finddata/',
           // `${this.$store.getters["settings/backend_api_url"]}wemast-api-back-end-0.1/api/dataserver/finddata`,
           params,
+          // params = {
+          //   ...params,
+          //   geometry: JSON.stringify(this.selectedGeojson.geojson),
+          //               indicator: this.UserSelections?.indicator,
+          //              sub_indicator: this.UserSelections?.sub_indicator,
+          //               year: this.UserSelections?.year,
+
+          // }
+          
 
           // {
           //   headers: {
@@ -906,33 +940,41 @@ export default {
           //   }
           // }
         );
-        if (process.env.DEV) console.log("find data response ", response.data);
-        if (response.data?.status === "ERROR") {
-          this.$q.loading.hide();
-          return negative("Could not get requested data");
-        }
-        this.response_data = response.data;
-        // console.log(response.data, 'find data')
-        await this.getWMS_Layer({
-          base_url: response.data.geoserver,
-          layers: response.data.layername
-        });
+       
 
-        await this.getLegend({
-          base_url: response.data.geoserver,
-          legend_url: response.data.legendurl
-        });
-        if (!this.clear_compare) {
-          this.$q.loading.hide();
-          return;
-        }
-        params = {
-          ...params,
-          geometry: JSON.stringify(this.selectedGeojson.geojson)
-        };
-        await this.getStatistics(params);
-        this.$q.loading.hide();
-        this.getMetaData(response.data.metadataid);
+        
+        // if (process.env.DEV)
+         console.log("find data response ", response.data);
+        // if (response.data?.status === "ERROR") {
+        //   this.$q.loading.hide();
+        //   return negative("Could not get requested data");
+        // }
+                                                this.response_data = response.data;
+                                                console.log(response.data, 'find data')
+                                                await this.getWMS_Layer({
+                                                  base_url: response.data.geoserver,
+                                                  layers: response.data.layername,
+                                                  style: response.data.sldname,
+                                                });
+
+        // await this.getLegend({
+        //   base_url: response.data.geoserver,
+        //   legend_url: response.data.legendurl
+        // });
+        // if (!this.clear_compare) {
+        //   this.$q.loading.hide();
+        //   return;
+        // // }
+        //               params = {
+        //                 ...params,
+        //                 geometry: JSON.stringify(this.selectedGeojson.geojson),
+        //                 indicator: this.UserSelections?.indicator,
+        //                sub_indicator: this.UserSelections?.sub_indicator,
+        //                 year: this.UserSelections?.year,
+        //               };
+        // await this.getStatistics(params);
+        // this.$q.loading.hide();
+        // this.getMetaData(response.data.metadataid);
       } catch (error) {
         if (process.env.DEV) console.log("find data error ", error);
         this.$q.loading.hide();
@@ -989,29 +1031,29 @@ export default {
       };
       this.compare_legend.addTo(this.map);
     },
-    async getLegend({ base_url, legend_url }) {
-      fetch(`${base_url}/${legend_url}`, {
-        headers: {
-          sdf09rt2s: "locateit"
-        }
-      })
-        .then(response => response.blob())
-        .then(blob => {
-          //
-          const reader = new FileReader();
-          reader.readAsDataURL(blob);
-          reader.onloadend = () => {
-            if (!this.clear_compare) {
-              this.compare_legend_link = reader.result;
-              this.CreateCompareLegend();
-              // this.ShowSideBySide();
-            } else {
-              this.legend_link = reader.result;
-              this.CreateLegend();
-            }
-          };
-        });
-    },
+    // async getLegend({ base_url, legend_url }) {
+    //   fetch(`${base_url}/${legend_url}`, {
+    //     headers: {
+    //       sdf09rt2s: "locateit"
+    //     }
+    //   })
+    //     .then(response => response.blob())
+    //     .then(blob => {
+    //       //
+    //       const reader = new FileReader();
+    //       reader.readAsDataURL(blob);
+    //       reader.onloadend = () => {
+    //         if (!this.clear_compare) {
+    //           this.compare_legend_link = reader.result;
+    //           this.CreateCompareLegend();
+    //           // this.ShowSideBySide();
+    //         } else {
+    //           this.legend_link = reader.result;
+    //           this.CreateLegend();
+    //         }
+    //       };
+    //     });
+    // },
     async getStatistics(params) {
       try {
         this.stats = {};
@@ -1094,15 +1136,22 @@ export default {
       }
     },
     async getWMS_Layer({ layers }) {
+      console.log(this.response_data.geoserver, 'WMS  url') //'http://149.248.57.97:8080/geoserver/wms?'
+      console.log(`${layers}`, 'WMS HEADER LAYERS') //"wemast_datasets:Exposure_Land Cover___2016"
+      console.log(this.response_data.sldname, 'WMS  HEADER STYLE') //'Exposure_Land Cover_cuv' // 'http://149.248.57.97:8080/geoserver/wms?',
       try {
-        const wmsLayer = L.TileLayer.wmsHeader(
-          `${this.response_data.geoserver}/wms?time=${this.year}`,
+        const wmsLayer = L.tileLayer.wms(
+          // 'http://149.248.57.97:8080/geoserver/wms?',
+          `${this.response_data.geoserver}`,
           {
-            layers,
+            layers:`${layers}`,
             format: "image/png",
-            transparent: true
+            transparent: true,
+            crs: L.CRS.EPSG4326,
+            opacity:1,
+            styles: `${this.response_data.sldname}`
           },
-          [{ header: "sdf09rt2s", value: "locateit" }],
+          // [{ header: "sdf09rt2s", value: "locateit" }],
           null
         );
 
