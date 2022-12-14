@@ -1,8 +1,10 @@
 <template>
-  <div class="row q-pb-md q-mb-xs" style="background-color: #f6f6f6; position: relative; top: -0.4vh;">
+  <div class="row q-pb-md q-mb-xs" style="background-color: #f6f6f6; position: relative; width: 93vw; height: 84px; padding: 15px; top: -0.4vh; left: 5vw; border-radius: 30px; padding-bottom: 20px;">
+    
     <div class="WeMast_Options_selections q-pa-xs">
-      <label  class="text-weight-bold">{{ $t("wemast_select_region") }}</label>
+      <label id="select_region"  class="text-weight-bold">{{ $t("wemast_select_region") }}</label>
       <q-select
+        
         dense
         outlined
         rounded
@@ -10,7 +12,8 @@
         :options="regions"
         @input="handleRegion"
         :options-dense="true"
-        style="width: 130px"
+        style="width: 150px; position: absolute;
+  left: 2vw; top: 3.5vh;"
       >
         <template v-slot:no-option>
           <q-item>
@@ -20,7 +23,7 @@
       </q-select>
     </div>
     <div class="WeMast_Options_selections q-pa-xs">
-      <label class="text-weight-bold">{{
+      <label id="select_indicator"  class="text-weight-bold">{{
         $t("wemast_select_indicator")
       }}</label>
       <q-select
@@ -31,11 +34,13 @@
         v-model="indicator"
         :options="this.indicators_list"
         :options-dense="true"
+        style="width: 150px; position: absolute;
+  left: 11vw; top: 3.5vh;"
       />
     </div>
 
     <div class="q-pa-xs WeMast_Options_selections">
-      <label class="text-weight-bold">{{
+      <label class="text-weight-bold" id="select_sub_indicator">{{
         $t("wemast_select_subindicator")
       }}</label>
       <q-select
@@ -46,7 +51,8 @@
         :options="this.sub_indicators_list"
         @input="handleSubIndicator"
         :options-dense="true"
-        style="width: 180px"
+        style="width: 180px;position: absolute;
+  left: 20vw; top: 3.5vh;"
       />
     </div>
 
@@ -62,11 +68,12 @@
         :options="parameters"
         @input="handleParameter"
         :options-dense="true"
+        
       />
     </div>
 
     <div class="q-pa-xs WeMast_Options_selections">
-      <label class="text-weight-bold">{{ $t("wemast_select_year") }}</label>
+      <label class="text-weight-bold" id="select_year">{{ $t("wemast_select_year") }}</label>
       <q-select
         dense
         rounded
@@ -75,7 +82,8 @@
         @input="handleYear"
         :options="this.year_list"
         :options-dense="true"
-        style="width: 130px"
+        style="width: 150px; position: absolute;
+  left: 30vw; top: 3.5vh;"
       />
     </div>
 
@@ -92,18 +100,19 @@
         :options="seasons"
         @input="handleSeason"
         :options-dense="true"
-        style="width: 130px"
+        style="width: 150px"
       >
       </q-select>
     </div>
-    <div class="q-pa-xs" style="margin-top: 20px">
+    <div class="q-pa-xs"   >
       <q-btn
         unelevated
         rounded
         color="primary"
-        style="height: 40px"
+        style="height: 40px; margin-top: 0px;position:absolute; left: 39vw; width: 7vw; top:3.5vh;"
         @click="handleRequest"
         label="Request"
+     
       />
     </div>
 
@@ -557,10 +566,46 @@ console.log('error')
   background-color: white;
 }
 .q-select {
-  width: 165px;
+  width: 175px;
 }
 .WeMast_Options_selections >>> .q-field--auto-height .q-field__native {
   justify-content: center;
+ 
+}
+#select_region{
+  font-weight: 600;
+  font-size: 12px;
+  position: relative;
+  left: 1.5vw;
+  top: -1vh;
+}
+#select_indicator{
+  font-weight: 600;
+  font-size: 12px;
+  position: relative;
+  left: 5.8vw;
+  top: -1vh;
+
+}
+#select_sub_indicator{
+  font-weight: 600;
+  font-size: 12px;
+  position: relative;
+  left: 10vw;
+  top: -1vh;
+
+}
+#select_year{
+  font-weight: 600;
+  font-size: 12px;
+  position: relative;
+  left: 14vw;
+  top: -1vh;
+
+}
+#q_select_region{
+  position: absolute;
+  left: 55vw;
 }
 @media screen and (min-width: 1920px) {
   .q-select {
