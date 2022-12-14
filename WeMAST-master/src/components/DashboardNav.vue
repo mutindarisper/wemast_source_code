@@ -2,20 +2,26 @@
   <div class="q-pa-none sticky">
     <div class="row q-mb-sm" id="navigation">
       <div class="co">
-        <img :src="require('assets/logos/SASSCAL.png')" class="WeMast_Img" />
+        <img :src="require('assets/logos/WeMAST.png')" class="WeMast_Img" />
       </div>
-      <span id="wemast_2" class="text-weight-bold">WeMAST</span>
+      <!-- <span id="wemast_2" class="text-weight-bold">WeMAST</span> -->
       <div class="col-md  WeMast_title ">
         
-        <label class="text-weight-bold "> {{ $t("wemast_title") }}</label>
+        <label class="text-weight-light" id="wemast_2"> {{ $t("wemast_title") }}</label>
+      </div>
+        <label for="" class="wemast_sub">{{$t("wemast_subtitle")}} <span class="wemast_bracket">{{$t("wemast_bracket")}}</span></label>
         
         <!-- <span id="wemast_2" class="text-primary text-weight-bold">WeMAST 2.0</span> -->
+     
+      <div class="col-md  WeMast_top_logos" style="height:20px; ">
+        <MainNavLogos class="logos_main" />
       </div>
-      <!-- <div class="col-md  WeMast_top_logos" style="height:20px;">
-        <MainNavLogos class="" />
-      </div> -->
+      <div class="q-pa-xs" id="change_lang"> 
+             <!-- :select  -->
+             <LanguageSelection /> 
+           </div>
 
-      <div class="  WeMast_right_items ">
+      <!-- <div class="  WeMast_right_items ">
         <div class="row float-right" >
           <div
             class="q-pa-sm q-mr-md wemast_nav_icons"
@@ -67,14 +73,14 @@
             </a>
                <br />
               <label class="label_title">Search</label>
-          </div>
-          <div class="q-pa-xs">
+          </div> -->
+          <!-- <div class="q-pa-xs"> -->
             <!-- :select -->
             <!-- <LanguageSelection /> -->
-          </div>
+          <!-- </div> -->
           <!-- <Login/> -->
-        </div>
-      </div>
+        <!-- </div> -->
+      <!-- </div> -->
     </div>
     <div class="row">
       <div class="col-md-12">
@@ -95,7 +101,7 @@ export default {
   },
   components: {
     DashboardSelections: require("src/components/DashboardSelections").default,
-    // MainNavLogos: require("src/components/MainNavLogos").default,
+    MainNavLogos: require("src/components/MainNavLogos").default,
     Login: require("src/components/Login").default,
     LanguageSelection: require("src/components/LanguageSelection").default
   },
@@ -118,7 +124,7 @@ export default {
 
 <style soped>
 #navigation{
-  background: url('/images/wetland2.PNG');
+  /* background: url('/images/wetland2.PNG'); */
   height: 12vh;
   /* background-clip: content-box; */
   background-repeat: no-repeat;
@@ -126,22 +132,31 @@ export default {
   
 }
 .WeMast_Img {
-  height: 75px;
-  margin-left: 8px;
+  height: 50px;
+  margin-left: 5vw;
   margin-right: 35px;
-  margin-top: 20px;
+  margin-top: 4vh;
 }
 .WeMast_title {
-  margin-top: 45px;
+  margin-top: 3vh !important;
   position: relative;
   left: 2vw;
+  text-transform: uppercase;
 }
 #wemast_2{
-  margin-top: 25px;
-  position: relative;
-  left: 0.5vw;
-  font-size: 36px;
-  color: black;
+font-size:14px ;
+font-weight: 500;
+}
+.wemast_sub{
+  position: absolute;
+  top: 6vh;
+  left: 12.9vw;
+  font-size:14px ;
+  font-weight: 500;
+}
+.wemast_bracket{
+  color: #1783c4;
+  font-weight: 600;
 }
 @media screen and (min-width: 1440px) {
   .WeMast_title {
@@ -157,6 +172,20 @@ export default {
 }
 .WeMast_top_logos {
   margin-top: 35px;
+}
+.logos_main{
+  position: absolute;
+  top: 4vh;
+  z-index: 1000;
+  /* display: flex;
+  flex-direction: row;
+  gap: 1.5rem; */
+  /* background-color: rgb(212, 31, 31); */
+}
+#change_lang{
+  position: absolute;
+  top: 4vh;
+  left: 90vw;
 }
 .q-select__dropdown-icon {
   transition: transform 0.32s;

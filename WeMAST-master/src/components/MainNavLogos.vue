@@ -2,6 +2,10 @@
   <div class="row">
     <div class="col2" id="logos">
       <div class="row" >
+        <img
+        :src="require('assets/logos/SASSCAL.png')"
+        class="WeMast_Dashboard_logos" 
+      />
       <img
         :src="require('assets/logos/Gmes.png')"
         class="WeMast_Dashboard_logos"
@@ -17,10 +21,7 @@
         class="WeMast_Dashboard_logos"
       />
 
-      <img
-        :src="require('assets/logos/WeMAST.png')"
-        class="WeMast_Dashboard_logos" 
-      />
+      
     
     </div>
     

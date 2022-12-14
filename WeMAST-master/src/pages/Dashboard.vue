@@ -10,9 +10,9 @@
     clear_compare
     {{ clear_compare }} -->
 
-    <div class="col-md  WeMast_top_logos" id="logos" style="height:20px;">
+    <!-- <div class="col-md  WeMast_top_logos" id="logos" style="height:20px;">
         <MainNavLogos class="" />
-      </div>
+      </div> -->
 
     <div class="mapwrap">
       <div id="more_options">
@@ -39,8 +39,7 @@
           <div
             class="compare"
             @click="handleMoreOptionsClicked('compare')"
-            :style="
-              more_options_selected === `compare`
+            :style="more_options_selected === `compare`
                 ? ` border-left: 35px solid steelblue;`
                 : ``
             "
@@ -957,10 +956,10 @@ export default {
                                                   style: response.data.sldname,
                                                 });
 
-        // await this.getLegend({
-        //   base_url: response.data.geoserver,
-        //   legend_url: response.data.legendurl
-        // });
+        await this.getLegend({
+          base_url: response.data.geoserver,
+          legend_url: response.data.legendurl
+        });
         // if (!this.clear_compare) {
         //   this.$q.loading.hide();
         //   return;
@@ -1031,29 +1030,31 @@ export default {
       };
       this.compare_legend.addTo(this.map);
     },
-    // async getLegend({ base_url, legend_url }) {
-    //   fetch(`${base_url}/${legend_url}`, {
-    //     headers: {
-    //       sdf09rt2s: "locateit"
-    //     }
-    //   })
-    //     .then(response => response.blob())
-    //     .then(blob => {
-    //       //
-    //       const reader = new FileReader();
-    //       reader.readAsDataURL(blob);
-    //       reader.onloadend = () => {
-    //         if (!this.clear_compare) {
-    //           this.compare_legend_link = reader.result;
-    //           this.CreateCompareLegend();
-    //           // this.ShowSideBySide();
-    //         } else {
-    //           this.legend_link = reader.result;
-    //           this.CreateLegend();
-    //         }
-    //       };
-    //     });
-    // },
+    async getLegend({ base_url, legend_url }) {
+
+      console.log(`${base_url}${legend_url}`, ' get legend url')
+      fetch(`${base_url}${legend_url}`, {
+        // headers: {
+        //   sdf09rt2s: "locateit"
+        // }
+      })
+        .then(response => response.blob())
+        .then(blob => {
+          //
+          const reader = new FileReader();
+          reader.readAsDataURL(blob);
+          reader.onloadend = () => {
+            if (!this.clear_compare) {
+              this.compare_legend_link = reader.result;
+              this.CreateCompareLegend();
+              // this.ShowSideBySide();
+            } else {
+              this.legend_link = reader.result;
+              this.CreateLegend();
+            }
+          };
+        });
+    },
     async getStatistics(params) {
       try {
         this.stats = {};
