@@ -21,8 +21,8 @@
              <LanguageSelection /> 
            </div>
 
-      <!-- <div class="  WeMast_right_items ">
-        <div class="row float-right" >
+      <div class="  WeMast_right_items ">
+        <div class="col float-right" >
           <div
             class="q-pa-sm q-mr-md wemast_nav_icons"
           >
@@ -35,19 +35,20 @@
             
             </router-link>
               <br />
-              <label class="label_title">Home</label>
+              <!-- <label class="label_title">Home</label> -->
           </div>
           <div
             class=" q-pa-sm q-mr-md wemast_nav_icons"
           >
             <q-icon
+            id="dash_icon"
             class="q-ml-md"
               color="primary"
             :name="$route.path === '/dashboard' ?'img:/uiIcons/dashboard-24px.svg':'img:/uiIcons/dashboard-inactive.svg'"
               size="37px"
             />
                <br />
-              <label class="label_title">Dashboard</label>
+              <!-- <label class="label_title">Dashboard</label> -->
           </div>
           <div
             class="q-pa-sm q-mr-md wemast_nav_icons"
@@ -61,7 +62,7 @@
               />
             </a>
                <br />
-              <label class="label_title">Admin</label>
+              <!-- <label class="label_title">Admin</label> -->
           </div>
           <div class="q-pa-sm q-mr-md wemast_nav_icons"> 
             <a :href="'http://169.1.31.169/bkeadmin/#/search'">
@@ -72,15 +73,15 @@
               />
             </a>
                <br />
-              <label class="label_title">Search</label>
-          </div> -->
+              <!-- <label class="label_title">Search</label> -->
+          </div>
           <!-- <div class="q-pa-xs"> -->
             <!-- :select -->
             <!-- <LanguageSelection /> -->
           <!-- </div> -->
           <!-- <Login/> -->
-        <!-- </div> -->
-      <!-- </div> -->
+        </div>
+      </div>
     </div>
     <div class="row">
       <div class="col-md-12">
@@ -169,6 +170,24 @@ font-weight: 500;
 }
 .WeMast_right_items {
   margin-top: 25px;
+  position: absolute;
+  top:22vh;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-bottom: 15px;
+}
+#dash_icon{
+  margin-left: 0;
+  /* background-color: #4891e0; */
+  border-radius: 10px;
+  height: 70px;
+  width:50px;
+ 
+  padding-top: -25px;
+  margin-bottom: -30px;
+  margin-left: 5px;
+  
 }
 .WeMast_top_logos {
   margin-top: 35px;

@@ -1435,7 +1435,8 @@ export default {
     height: 77.5vh;
     margin-top: -30px;
     margin-left: 5vw;
-    border-radius: 35px;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
     /* padding: 10px; */
   }
 }
@@ -1446,7 +1447,8 @@ export default {
     margin-top: -30px;
     width: 93%;
     margin-left: 5vw;
-    border-radius: 50px;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
   }
   #mapContainer >>> .leaflet-sbs-divider {
     margin-left: -2px;
@@ -1458,7 +1460,8 @@ export default {
     height: 73vh;
     margin-top: -30px;
     margin-left: 5vw;
-    border-radius: 50px;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
   }
 }
 
