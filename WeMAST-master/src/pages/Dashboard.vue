@@ -25,8 +25,11 @@
                 ? ` border-left: 35px solid steelblue;`
                 : ``
             "
+            
           >
-            <p style="white-space: nowrap; caret-color: transparent">
+          <img class="filter_icon" src="../../public/mapIcons/filter.svg" alt="">
+          <img class="filter_open" src="../../public/mapIcons/right.svg" alt="">
+            <p style="white-space: normal; caret-color: transparent">
               {{ $t("advanced_filter") }}
             </p>
             <div class="q-pa-none" v-if="more_options_selected === `filter`">
@@ -44,7 +47,10 @@
                 : ``
             "
           >
+          <img class="compare_icon" src="../../public/mapIcons/compare.svg" alt="">
+          <img class="compare_open" src="../../public/mapIcons/compare_right.svg" alt="">
             <p>{{ $t("compare") }}</p>
+            
             <div class="q-pa-none" v-if="more_options_selected === `compare`">
               <Compare
                 @close_card="close_card"
@@ -1421,17 +1427,22 @@ export default {
 
 @media screen and (min-height: 900px) {
   #mapContainer {
-    width: 100%;
+    width: 93%;
     height: 77.5vh;
     margin-top: -30px;
+    margin-left: 5vw;
+    border-radius: 35px;
+    /* padding: 10px; */
   }
 }
 
 @media screen and (max-height: 720px) {
   #mapContainer {
-    width: 100%;
     height: 62vh;
     margin-top: -30px;
+    width: 93%;
+    margin-left: 5vw;
+    border-radius: 50px;
   }
   #mapContainer >>> .leaflet-sbs-divider {
     margin-left: -2px;
@@ -1439,9 +1450,11 @@ export default {
 }
 @media screen and (min-height: 800px) and (max-height: 899px) {
   #mapContainer {
-    width: 100%;
+    width: 93%;
     height: 73vh;
     margin-top: -30px;
+    margin-left: 5vw;
+    border-radius: 50px;
   }
 }
 
