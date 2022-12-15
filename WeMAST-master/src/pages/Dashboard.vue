@@ -22,7 +22,7 @@
             @click="handleMoreOptionsClicked('filter')"
             :style="
               more_options_selected === `filter`
-                ? ` border-left: 35px solid steelblue;`
+                ? ` border-left: 0px solid steelblue;`
                 : ``
             "
             
@@ -32,7 +32,7 @@
             <p style="white-space: normal; caret-color: transparent">
               {{ $t("advanced_filter") }}
             </p>
-            <div class="q-pa-none" v-if="more_options_selected === `filter`">
+            <div id="filter_component" class="q-pa-none" v-if="more_options_selected === `filter`">
               <AdvancedFilters
                 @close_card="close_card"
                 @handleRequest="handleRequest"
@@ -43,7 +43,7 @@
             class="compare"
             @click="handleMoreOptionsClicked('compare')"
             :style="more_options_selected === `compare`
-                ? ` border-left: 35px solid steelblue;`
+                ? ` border-left: 0px solid steelblue;`
                 : ``
             "
           >
@@ -51,7 +51,7 @@
           <img class="compare_open" src="../../public/mapIcons/compare_right.svg" alt="">
             <p>{{ $t("compare") }}</p>
             
-            <div class="q-pa-none" v-if="more_options_selected === `compare`">
+            <div id="compare_component" class="q-pa-none" v-if="more_options_selected === `compare`">
               <Compare
                 @close_card="close_card"
                 @handleCompareEmit="handleCompareEmit"
