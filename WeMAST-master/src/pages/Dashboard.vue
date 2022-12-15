@@ -633,7 +633,11 @@ export default {
         document.getElementById("show_base_layers").style.display = "none";
       if (this.show_base_layers) {
         document.getElementById("show_base_layers").style.display = "block";
-        document.getElementById("show_base_layers").style.marginRight = "-4px";
+        document.getElementById("show_base_layers").style.marginRight = "-20px";
+        document.getElementById("show_base_layers").style.position = "absolute";
+        document.getElementById("show_base_layers").style.top = "21.8vh";
+        document.getElementById("show_base_layers").style.right = "10vw";
+        
 
         //create the base map list and render
         const base_layers = Object.keys(this.baseMaps);
@@ -1466,10 +1470,14 @@ export default {
   margin-top: -38px;
   width: 288px;
 }
+
 #mapContainer >>> .WeMAST_leaflet_controls {
   font-size: 30px;
-  position: sticky;
+  position: absolute;
   top: 40%;
+  display: flex;
+  flex-direction: column;
+  /* gap: -2rem; */
 }
 #mapContainer >>> .WeMAST_leaflet_controls img {
   padding-right: 5px;
@@ -1477,6 +1485,11 @@ export default {
   padding-top: 5px;
   padding-bottom: 5px;
   background-color: white;
+}
+.WeMAST_leaflet_controls {
+  
+left: 90vw;
+ 
 }
 
 /* from hapa ni side nav */
@@ -1534,13 +1547,22 @@ export default {
 }
 
 #close {
-  margin-top: 9px;
-  margin-left: 8px;
+  margin-top: 6px;
+  margin-left: 3.5px;
+  background-color: #4891e0;
+  border-radius: 50%;
+  padding: 5px;
+  margin-right: 10px;
+
 }
 #open {
-  margin-top: 9px;
-  margin-left: 8px;
+  margin-top: 29px;
+  margin-left: -62px;
   transform: rotate(180deg);
+  background-color: #4891e0;
+  border-radius: 50%;
+  padding: 5px;
+
 }
 @media screen and (max-height: 800px) {
   .logos_container {
@@ -1638,9 +1660,9 @@ export default {
   /* Position the tooltip */
   position: absolute;
   z-index: 1;
-  top: 90%;
-  left: 50%;
-  margin-left: 9px;
+  top: 10vh;
+  left: -100%;
+  margin-left: 70px;
 }
 
 #mapContainer >>> .wemast_download_map:hover .tooltiptext {
@@ -1659,8 +1681,8 @@ export default {
   /* Position the tooltip */
   position: absolute;
   z-index: 1;
-  top: 90%;
-  left: 50%;
+  top: 13%;
+  left: -40%;
   margin-left: -30px;
 }
 #mapContainer >>> .wemast_download:hover .tooltiptext {
@@ -1679,8 +1701,8 @@ export default {
   /* Position the tooltip */
   position: absolute;
   z-index: 1;
-  top: 90%;
-  left: 50%;
+  top: 35%;
+  left: -85%;
   margin-left: 45px;
 }
 #mapContainer >>> .wemast_measure:hover .tooltiptext {
@@ -1699,8 +1721,8 @@ export default {
   /* Position the tooltip */
   position: absolute;
   z-index: 1;
-  top: 90%;
-  left: 50%;
+  top: 58%;
+  left: -210px;
   margin-left: 120px;
 }
 #mapContainer >>> .wemast_draw:hover .tooltiptext {
@@ -1720,7 +1742,7 @@ export default {
   position: absolute;
   z-index: 1;
   top: 90%;
-  left: 67%;
+  left: -217px;
   margin-left: 120px;
 }
 #mapContainer >>> .wemast_help:hover .tooltiptext {
